@@ -1,16 +1,31 @@
-package jobOffers; 
+package jobOffers;
+
 import java.util.*;
 
 
 public class JobOffers  {
 
+	private HashSet<String> skills = new HashSet<>();
+	private HashMap<String, Position> positions = new HashMap<>();
+
 //R1
 	public int addSkills (String... skills) {
-		return -1;
+		for(String s : skills) this.skills.add(s);
+		return this.skills.size();
 	}
 	
 	public int addPosition (String position, String... skillLevels) throws JOException {
-		return -1;
+		if(positions.containsKey(position)) throw new JOException(position);
+		Position p = new Position(position);
+		String skill[];
+		for(String s: skillLevels){
+			skill=s.split(":");
+			if(Integer.parseInt(skill[1])<4 || Integer.parseInt(skill[1])>8) throw new JOException(position);
+			p.addSkill(s);
+		}
+		positions.put(position, p);
+		
+		return p.getAverage();
 	}
 	
 //R2	
