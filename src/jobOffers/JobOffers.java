@@ -83,7 +83,7 @@ public class JobOffers  {
 		for(String s : skillRatings){
 			String str[] = s.split(":");
 			if(Integer.parseInt(str[1])<4 || Integer.parseInt(str[1])>10) throw new JOException(candidate); 
-			candidates.get(candidate).addskillRating(s);
+			candidates.get(candidate).addskillRating(str[0], Integer.parseInt(str[1]));
 		}
 		if(!candidates.get(candidate).areAllRated()) throw new JOException(candidate); 
 
@@ -92,12 +92,20 @@ public class JobOffers  {
 	
 //R4
 	public List<String> discardApplications() {
-		return null;
+		for(Application a : applications) a.assess();
+
+		return applications.stream().filter(a->a.getStatus()==false)
+		.sorted(Comparator.comparing(Application::getCandidateName).thenComparing(Application::getPositionName))
+		.map(Application::toString).collect(Collectors.toList());
 	}
 	
 	 
 	public List<String> getEligibleCandidates(String position) {
-		return null;
+		for(Application a : applications) a.assess();
+
+		return applications.stream().filter(a->a.getPositionName().equals(position) && a.getStatus()==true)
+		.sorted(Comparator.comparing(Application::getCandidateName)).map(Application::getCandidateName)
+		.collect(Collectors.toList());
 	}
 	
 

@@ -38,9 +38,8 @@ public class Candidate {
         return skillsRatings;
     }
 
-    public void addskillRating(String s){
-        String skill[]=s.split(":");
-        skillsRatings.put(skill[0], Integer.parseInt(skill[1]));
+    public void addskillRating(String s, int val){
+        skillsRatings.put(s, val);
     }
 
     public Boolean areAllRated(){
