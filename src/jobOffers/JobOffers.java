@@ -10,7 +10,6 @@ public class JobOffers  {
 	private HashMap<String, Position> positions = new HashMap<>();
 	private HashMap<String, Candidate> candidates = new HashMap<>();
 	private HashSet<Application> applications = new HashSet<>();
-	//private HashMap<Position, LinkedList<Candidates>> applications = new HashMap<>();
 
 //R1
 	public int addSkills (String... skills) {
@@ -54,14 +53,14 @@ public class JobOffers  {
 			else throw new JOException(candidate);
 		}
 
-		return applications.stream().sorted(Comparator.comparing(Application::getCandidateName)
-		.thenComparing(Application::getPositionName)).map(Application::toString)
-		.collect(Collectors.toList());
+		return applications.stream().filter(a->a.getCandidateName().equals(candidate))
+		.sorted(Comparator.comparing(Application::getCandidateName).thenComparing(Application::getPositionName))
+		.map(Application::toString).collect(Collectors.toList());
 	} 
 	
 	public TreeMap<String, List<String>> getCandidatesForPositions() {
-		return applications.stream().sorted(Comparator.comparing(Application::getPositionName))
-		.collect(Collectors.groupingBy(Application::getPositionName, TreeMap::new));
+		return applications.stream().sorted(Comparator.comparing(Application::getPositionName).thenComparing(Application::getCandidateName))
+		.collect(Collectors.groupingBy(Application::getPositionName, TreeMap::new, Collectors.mapping(Application::getCandidateName, Collectors.toList())));
 	}
 	
 	
