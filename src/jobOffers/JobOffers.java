@@ -10,6 +10,7 @@ public class JobOffers  {
 	private HashMap<String, Position> positions = new HashMap<>();
 	private HashMap<String, Candidate> candidates = new HashMap<>();
 	private HashSet<Application> applications = new HashSet<>();
+	private HashMap<String, Consultant> consultants = new HashMap<>();
 
 //R1
 	public int addSkills (String... skills) {
@@ -21,7 +22,7 @@ public class JobOffers  {
 		if(positions.containsKey(position)) throw new JOException(position);
 		Position p = new Position(position);
 		String skill[];
-		for(String s: skillLevels){
+		for(String s: skillLevels){ 
 			skill=s.split(":");
 			if(!skills.contains(skill[0])) throw new JOException(position);
 			if(Integer.parseInt(skill[1])<4 || Integer.parseInt(skill[1])>8) throw new JOException(position);
@@ -66,11 +67,27 @@ public class JobOffers  {
 	
 //R3
 	public int addConsultant (String name, String... skills) throws JOException {
-		return -1;
+		if(consultants.containsKey(name)) throw new JOException(name);
+		Consultant c = new Consultant(name);
+		for(String s : skills){
+			if(!this.skills.contains(s)) throw new JOException(name);
+			c.addSkill(s);
+		} 
+		consultants.put(name, c);
+
+		return c.getSkills().size();
 	}
 	
 	public Integer addRatings (String consultant, String candidate, String... skillRatings)  throws JOException {
-		return -1;
+		if(consultants.get(consultant)==null || candidates.get(candidate)==null) throw new JOException(candidate); 
+		for(String s : skillRatings){
+			String str[] = s.split(":");
+			if(Integer.parseInt(str[1])<4 || Integer.parseInt(str[1])>10) throw new JOException(candidate); 
+			candidates.get(candidate).addskillRating(s);
+		}
+		if(!candidates.get(candidate).areAllRated()) throw new JOException(candidate); 
+
+		return candidates.get(candidate).getAverage();
 	}
 	
 //R4

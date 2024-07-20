@@ -1,11 +1,13 @@
 package jobOffers;
 
 import java.util.HashSet;
+import java.util.HashMap;
 
 public class Candidate {
 
     private String name;
     private HashSet<String> skills = new HashSet<>();
+    private HashMap<String, Integer> skillsRatings = new HashMap<>();
 
     
     public Candidate(String name) {
@@ -31,5 +33,25 @@ public class Candidate {
         return true;
     }
 
+
+    public HashMap<String, Integer> getSkillsRatings() {
+        return skillsRatings;
+    }
+
+    public void addskillRating(String s){
+        String skill[]=s.split(":");
+        skillsRatings.put(skill[0], Integer.parseInt(skill[1]));
+    }
+
+    public Boolean areAllRated(){
+        if(skills.size()==skillsRatings.size()) return true;
+        return false;
+    }
+
+    public Integer getAverage(){
+        Integer sum=0;
+        for(Integer i : skillsRatings.values()) sum+=i;
+        return sum/skillsRatings.size();
+    }
 
 }
